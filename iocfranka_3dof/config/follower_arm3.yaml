@@ -1,0 +1,8 @@
+/**:
+  ros__parameters:
+    use_sim_time: true
+    joints:
+      - follower_fr3_joint3
+      - follower_fr3_joint4
+      - follower_fr3_joint5
+    interface_name: effort

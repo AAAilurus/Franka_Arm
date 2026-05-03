@@ -1,0 +1,14 @@
+/**:
+  ros__parameters:
+    use_sim_time: true
+    joints:
+      - follower_fr3_joint1
+      - follower_fr3_joint2
+      - follower_fr3_joint6
+      - follower_fr3_joint7
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: false

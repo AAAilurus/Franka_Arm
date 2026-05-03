@@ -1,0 +1,36 @@
+follower:
+  controller_manager:
+    ros__parameters:
+      use_sim_time: true
+      update_rate: 1000
+      joint_state_broadcaster.type: joint_state_broadcaster/JointStateBroadcaster
+      fixed_joints_hold.type: joint_trajectory_controller/JointTrajectoryController
+      arm_3dof_cmd.type: forward_command_controller/ForwardCommandController
+
+  joint_state_broadcaster:
+    ros__parameters:
+      use_sim_time: true
+
+  fixed_joints_hold:
+    ros__parameters:
+      use_sim_time: true
+      joints:
+        - follower_fr3_joint1
+        - follower_fr3_joint2
+        - follower_fr3_joint6
+        - follower_fr3_joint7
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      allow_partial_joints_goal: false
+
+  arm_3dof_cmd:
+    ros__parameters:
+      use_sim_time: true
+      joints:
+        - follower_fr3_joint3
+        - follower_fr3_joint4
+        - follower_fr3_joint5
+      interface_name: effort

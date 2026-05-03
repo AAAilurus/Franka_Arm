@@ -1,0 +1,7 @@
+/**:
+  ros__parameters:
+    joints:
+      - leader_fr3_joint3
+      - leader_fr3_joint4
+      - leader_fr3_joint5
+    interface_name: effort

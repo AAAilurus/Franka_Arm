@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fr3_3dof">
+  <xacro:arg name="arm_id" default="fr3"/>
+  <xacro:arg name="arm_prefix" default=""/>
+  <xacro:arg name="controllers_file" default=""/>
+  <xacro:arg name="ros2_control" default="true"/>
+  <xacro:arg name="robot_param_node" default="robot_state_publisher"/>
+  <xacro:arg name="xyz" default="0 0 0"/>
+  <xacro:arg name="rpy" default="0 0 0"/>
+
+  <xacro:include filename="$(find franka_leader_3dof)/urdf/franka_robot_3dof.xacro"/>
+
+  <xacro:franka_robot
+      arm_id="$(arg arm_id)"
+      arm_prefix="$(arg arm_prefix)"
+      joint_limits="${xacro.load_yaml('$(find franka_description)/robots/fr3/joint_limits.yaml')}"
+      inertials="${xacro.load_yaml('$(find franka_description)/robots/fr3/inertials.yaml')}"
+      kinematics="${xacro.load_yaml('$(find franka_description)/robots/fr3/kinematics.yaml')}"
+      accelerometer_config="${xacro.load_yaml('$(find franka_description)/robots/fr3/accelerometers.yaml')}"
+      dynamics="${xacro.load_yaml('$(find franka_description)/robots/fr3/dynamics.yaml')}"
+      gazebo="true"
+      hand="false"
+      ee_id="franka_hand"
+      ros2_control="$(arg ros2_control)"
+      gazebo_effort="true"
+      connected_to="world"
+      xyz="$(arg xyz)"
+      rpy="$(arg rpy)"
+      controllers_file="$(arg controllers_file)"
+      robot_param_node="$(arg robot_param_node)">
+  </xacro:franka_robot>
+</robot>

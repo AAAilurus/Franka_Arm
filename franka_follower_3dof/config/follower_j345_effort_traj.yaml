@@ -1,0 +1,35 @@
+/**:
+  ros__parameters:
+    joints:
+      - follower_fr3_joint3
+      - follower_fr3_joint4
+      - follower_fr3_joint5
+
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+
+    allow_partial_joints_goal: false
+    allow_nonzero_velocity_at_trajectory_end: false
+    open_loop_control: false
+
+    constraints:
+      stopped_velocity_tolerance: 0.05
+      goal_time: 5.0
+      follower_fr3_joint3:
+        trajectory: 6.28
+        goal: 0.10
+      follower_fr3_joint4:
+        trajectory: 6.28
+        goal: 0.10
+      follower_fr3_joint5:
+        trajectory: 6.28
+        goal: 0.10
+
+    gains:
+      follower_fr3_joint3: {p: 8.0, d: 3.0, i: 0.0, i_clamp: 0.0}
+      follower_fr3_joint4: {p: 8.0, d: 3.0, i: 0.0, i_clamp: 0.0}
+      follower_fr3_joint5: {p: 5.0, d: 2.0, i: 0.0, i_clamp: 0.0}

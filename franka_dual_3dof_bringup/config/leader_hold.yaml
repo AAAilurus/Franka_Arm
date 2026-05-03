@@ -1,0 +1,22 @@
+/**:
+  ros__parameters:
+    joints:
+      - leader_fr3_joint1
+      - leader_fr3_joint2
+      - leader_fr3_joint6
+      - leader_fr3_joint7
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: false
+    allow_nonzero_velocity_at_trajectory_end: false
+    constraints:
+      stopped_velocity_tolerance: 0.001
+      goal_time: 0.5
+    gains:
+      leader_fr3_joint1: {p: 200.0, d: 20.0, i: 0.0, i_clamp: 0.0}
+      leader_fr3_joint2: {p: 200.0, d: 20.0, i: 0.0, i_clamp: 0.0}
+      leader_fr3_joint6: {p: 200.0, d: 20.0, i: 0.0, i_clamp: 0.0}
+      leader_fr3_joint7: {p: 200.0, d: 20.0, i: 0.0, i_clamp: 0.0}

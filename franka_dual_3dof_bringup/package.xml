@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>franka_dual_3dof_bringup</name>
+  <version>0.1.0</version>
+  <description>Dual FR3 3DOF bringup package</description>
+  <maintainer email="user@todo.todo">user</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>franka_leader_3dof</exec_depend>
+  <exec_depend>franka_follower_3dof</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

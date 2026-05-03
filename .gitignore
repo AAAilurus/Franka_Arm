@@ -1,0 +1,30 @@
+# ROS generated folders
+build/
+install/
+log/
+.colcon/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Core dumps / crash files
+core
+core.*
+*.core
+
+# Editor/system
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# Patch backups
+*.bak
+*.bak_*
+backup_*
+*_backup*
