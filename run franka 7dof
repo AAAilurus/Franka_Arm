@@ -1,0 +1,65 @@
+cd /ros2_ws
+colcon build --symlink-install --packages-select seven_dof_torque
+source /ros2_ws/install/setup.bash
+
+pkill -f fr3_7dof_nonlinear_lqr || true
+pkill -f "ros2 topic pub" || true
+pkill -f gz_fr3_dual_true_7dof_torque || true
+pkill -f robot_state_publisher || true
+pkill -f controller_manager || true
+pkill -f ros_gz_sim || true
+pkill -f ign || true
+pkill -f gz || true
+sleep 5
+
+ros2 launch seven_dof_torque gz_fr3_dual_true_7dof_torque.launch.py
+
+
+-------------------------------------------------------------------
+
+ros2 run seven_dof_torque fr3_7dof_nonlinear_lqr --ros-args \
+  -r __ns:=/leader \
+  -p joint_name_prefix:=leader_fr3_ \
+  -p joint_states_topic:=/leader/joint_states \
+  -p command_topic:=/leader/arm_7dof_cmd/commands \
+  -p urdf_path:=/tmp/fr3_leader_robot.urdf \
+  -p q_des_j1:=0.45 \
+  -p q_des_j2:=-0.55 \
+  -p q_des_j3:=0.30 \
+  -p q_des_j4:=-1.95 \
+  -p q_des_j5:=0.0 \
+  -p q_des_j6:=1.5707963268 \
+  -p q_des_j7:=0.7853981634 \
+  -p q_weight:=200.0 \
+  -p dq_weight:=150.0 \
+  -p r_weight:=2.0 \
+  -p tau_limit:=20.0 \
+  -p u_eq_scale:=0.0 \
+  -p disable_joint7_torque:=false \
+  > /tmp/leader_lqr.log 2>&1 &
+
+-------------------------------------------------------------------------
+
+ros2 run seven_dof_torque fr3_7dof_nonlinear_lqr --ros-args \
+  -r __ns:=/follower \
+  -p joint_name_prefix:=follower_fr3_ \
+  -p joint_states_topic:=/follower/joint_states \
+  -p command_topic:=/follower/arm_7dof_cmd/commands \
+  -p urdf_path:=/tmp/fr3_follower_robot.urdf \
+  -p q_des_j1:=0.45 \
+  -p q_des_j2:=-0.55 \
+  -p q_des_j3:=0.30 \
+  -p q_des_j4:=-1.95 \
+  -p q_des_j5:=0.0 \
+  -p q_des_j6:=1.5707963268 \
+  -p q_des_j7:=0.7853981634 \
+  -p q_weight:=200.0 \
+  -p dq_weight:=150.0 \
+  -p r_weight:=2.0 \
+  -p tau_limit:=20.0 \
+  -p u_eq_scale:=0.0 \
+  -p disable_joint7_torque:=false \
+  > /tmp/follower_lqr.log 2>&1 &
+
+---------------------------------------------------------------------------
+
