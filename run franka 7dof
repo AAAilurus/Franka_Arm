@@ -62,4 +62,26 @@ ros2 run seven_dof_torque fr3_7dof_nonlinear_lqr --ros-args \
   > /tmp/follower_lqr.log 2>&1 &
 
 ---------------------------------------------------------------------------
+#run single arm
+
+cd /ros2_ws
+source install/setup.bash
+
+rm -rf /tmp/fr3_single_arm_leader_recheck
+mkdir -p /tmp/fr3_single_arm_leader_recheck
+
+ros2 run seven_dof_torque fr3_7dof_demo_four_points_single_arm \
+  --ros-args \
+  -p out_dir:=/tmp/fr3_single_arm_leader_recheck \
+  -p rate_hz:=100.0 \
+  -p seconds_per_point:=8.0 \
+  -p tau_limit:=20.0 \
+  -p joint_name_prefix:=leader_fr3_ \
+  -p joint_states_topic:=/leader/joint_states \
+  -p command_topic:=/leader/arm_7dof_cmd/commands \
+  -p urdf_path:=/tmp/fr3_leader_robot.urdf
+
+
+-----------------------------------------------------------------------
+
 
