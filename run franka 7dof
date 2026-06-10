@@ -15,8 +15,115 @@ sleep 5
 ros2 launch seven_dof_torque gz_fr3_dual_true_7dof_torque.launch.py
 
 
--------------------------------------------------------------------
 
+-----------------------------------------------
+#launching a single arm
+cd /ros2_ws
+source install/setup.bash
+
+ros2 launch seven_dof_torque gz_fr3_dual_true_7dof_torque.launch.py
+
+
+-------------------------------------------------------------------
+#Traing a leader
+
+cd /ros2_ws
+source install/setup.bash
+
+OUT=/tmp/fr3_7dof_leader_real_150transient_policy_Uk1
+rm -rf "$OUT"
+mkdir -p "$OUT"
+
+ros2 run seven_dof_torque fr3_7dof_train_collect_csv \
+  --ros-args \
+  -p save_dir:="$OUT" \
+  -p num_traj:=150 \
+  -p T_each:=150 \
+  -p rate_hz:=100.0 \
+  -p sigma_q_vec:="[0.16,0.16,0.14,0.14,0.09,0.09,0.14]" \
+  -p eta_max:="[0.04,0.04,0.03,0.03,0.012,0.012,0.03]" \
+  -p dq_data_max:=2.0 \
+  -p noise_std:=1.0 \
+  -p eta_filter_alpha:=0.90 \
+  -p tau_limit_vec:="[20.0,20.0,20.0,20.0,12.0,12.0,12.0]"
+--------------------------------------------------------------------
+#K_learned output
+
+cd /ros2_ws
+
+python3 /ros2_ws/src/7dof_torque/seven_dof_torque/fr3_7dof_offline_spsa.py \
+  --out_dir /tmp/fr3_7dof_leader_real_150transient_policy_Uk1 \
+  --maxIter 30000 \
+  --alphaQ 0.20 \
+  --c_spsa 0.10 \
+  --reg_huu 1e-3 \
+  --R_diag 0.32 0.32 0.32 0.32 0.26 0.26 0.50
+--------------------------------------------------------------------
+#print R,K,Q value
+cd /ros2_ws
+
+python3 - << 'EOF'
+import numpy as np
+from pathlib import Path
+
+D = Path("/tmp/fr3_7dof_leader_real_150transient_policy_Uk1")
+
+def load_csv(path):
+    try:
+        return np.loadtxt(path, delimiter=",")
+    except ValueError:
+        return np.loadtxt(path, delimiter=",", skiprows=1)
+
+K_star = load_csv(D / "K_star.csv")
+K_learned = load_csv(D / "K_learned.csv")
+
+Q_star_diag = np.array([100,100,100,100,50,50,20,10,10,30,15,5,10,1], dtype=float)
+Q_learned_diag = np.array([
+    10.6954, 7.5867, 12.7167, 10.8991, 7.4386, 6.1825, 0.0,
+    38.1125, 19.2832, 7.0449, 9.2088, 0.0, 9.4554, 0.0
+], dtype=float)
+R_diag = np.array([0.32,0.32,0.32,0.32,0.26,0.26,0.50], dtype=float)
+
+print("||K_learned - K_star||_F =", np.linalg.norm(K_learned - K_star, "fro"))
+
+print("\nK_star =")
+print(np.round(K_star, 6))
+
+print("\nK_learned =")
+print(np.round(K_learned, 6))
+
+print("\nK_learned - K_star =")
+print(np.round(K_learned - K_star, 6))
+
+print("\nQ_star_diag =")
+print(Q_star_diag)
+
+print("\nQ_learned_diag =")
+print(Q_learned_diag)
+
+print("\nR_diag =")
+print(R_diag)
+EOF
+-----------------------------------------------------------------------
+#Demo leader follower
+
+cd /ros2_ws
+source install/setup.bash
+
+OUT=/tmp/fr3_7dof_demo_real150_spsa_pure
+rm -rf "$OUT"
+mkdir -p "$OUT"
+
+ros2 run seven_dof_torque fr3_7dof_demo_four_points \
+  --ros-args \
+  -p data_dir:=/tmp/fr3_7dof_leader_real_150transient_policy_Uk1 \
+  -p out_dir:="$OUT" \
+  -p rate_hz:=100.0 \
+  -p seconds_per_point:=8.0 \
+  -p tau_limit:=20.0
+
+-----------------------------------------------------------------------
+#Test for leader
 ros2 run seven_dof_torque fr3_7dof_nonlinear_lqr --ros-args \
   -r __ns:=/leader \
   -p joint_name_prefix:=leader_fr3_ \
@@ -62,7 +169,7 @@ ros2 run seven_dof_torque fr3_7dof_nonlinear_lqr --ros-args \
   > /tmp/follower_lqr.log 2>&1 &
 
 ---------------------------------------------------------------------------
-#run single arm
+#train single arm
 
 cd /ros2_ws
 source install/setup.bash
@@ -82,6 +189,26 @@ ros2 run seven_dof_torque fr3_7dof_demo_four_points_single_arm \
   -p urdf_path:=/tmp/fr3_leader_robot.urdf
 
 
+-------------------------------------------------------------
+
+#demo 4 waypoints
+cd /ros2_ws
+source install/setup.bash
+
+OUT=/tmp/fr3_7dof_demo_real150_spsa_pure_dotted
+rm -rf "$OUT"
+mkdir -p "$OUT"
+
+ros2 run seven_dof_torque fr3_7dof_demo_four_points \
+  --ros-args \
+  -p data_dir:=/tmp/fr3_7dof_leader_real_150transient_policy_Uk1 \
+  -p out_dir:="$OUT" \
+  -p rate_hz:=100.0 \
+  -p seconds_per_point:=8.0 \
+  -p tau_limit:=20.0
+
 -----------------------------------------------------------------------
+
+
 
 
